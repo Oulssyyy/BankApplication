@@ -1,0 +1,76 @@
+name: Java File Report
+
+on:
+  push:
+    branches: [ main, master, develop ]
+  pull_request:
+    branches: [ main, master, develop ]
+
+jobs:
+  java-report:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+    - name: Check for committed .class files
+      run: |
+        if find . -name "*.class" -type f ! -path "./target/*" ! -path "./.git/*" | grep -q .; then
+          echo "ERROR: Found committed .class files (bad practice). Please remove them."
+          find . -name "*.class" -type f ! -path "./target/*" ! -path "./.git/*"
+          exit 1
+        fi
+        echo "✓ No committed .class files found"
+    
+    - name: Check for Java files
+      run: |
+        JAVA_COUNT=$(find . -name "*.java" -type f | wc -l)
+        if [ "$JAVA_COUNT" -eq 0 ]; then
+          echo "ERROR: No .java files found in repository"
+          exit 1
+        fi
+        echo "Found $JAVA_COUNT .java files"
+    
+    - name: Generate Java file report
+      run: |
+        {
+          echo "===================="
+          echo "JAVA FILE REPORT"
+          echo "===================="
+          echo ""
+          
+          # Count total Java files
+          TOTAL_FILES=$(find . -name "*.java" -type f | sort | wc -l)
+          echo "Total Java Files: $TOTAL_FILES"
+          echo ""
+          
+          # Calculate total lines of code
+          TOTAL_LINES=$(find . -name "*.java" -type f -exec wc -l {} + | tail -1 | awk '{print $1}')
+          echo "Total Lines of Code: $TOTAL_LINES"
+          echo ""
+          
+          # Per-file breakdown
+          echo "===================="
+          echo "PER-FILE BREAKDOWN"
+          echo "===================="
+          find . -name "*.java" -type f -exec wc -l {} + | sort -rn | while read line_count file; do
+            # Skip the total line
+            if [ "$file" != "total" ] && [ -n "$file" ]; then
+              # Remove leading ./
+              clean_path="${file#./}"
+              echo "$clean_path -- $line_count lines"
+            fi
+          done
+        } | tee java-file-report.txt
+        
+        echo ""
+        echo "Report generated: java-file-report.txt"
+    
+    - name: Upload report as artifact
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: java-file-report
+        path: java-file-report.txt
+        retention-days: 30
