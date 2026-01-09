@@ -13,6 +13,10 @@ import java.util.Scanner;
  */
 public class BankAccountApp {
 
+	private static final String BALANCE = "BALANCE";
+	private static final String DEPOSIT = "DEPOSIT";
+	private static final String WITHDRAW = "WITHDRAW";
+	private static final String ACCOUNT_DOES_NOT_EXIST = "Account doesn't exist";
 
 	/**
 	 * @param args the command line arguments
@@ -89,11 +93,11 @@ public class BankAccountApp {
 									+ " DEPOSIT, WITHDRAW, BALANCE, or MAINMENU ");
 							operation = scan.next();
 
-							if (operation.equalsIgnoreCase("BALANCE")) {
+							if (operation.equalsIgnoreCase(BALANCE)) {
 								System.out.println("Balance is: " + acc1.getBalance());
 							}
 
-							if (operation.equalsIgnoreCase("DEPOSIT")) {
+							if (operation.equalsIgnoreCase(DEPOSIT)) {
 								System.out.println("Enter an amount to deposit");
 								double depositAmount = scan.nextDouble();
 								acc1.depositMoney(depositAmount);
@@ -136,7 +140,7 @@ public class BankAccountApp {
 					number = scan.nextInt();
 					BankAccount tmpacc = accManager.findAccount(number);
 					if (tmpacc == null) {
-						System.out.println("Account dosen't exist");
+						System.out.println(ACCOUNT_DOES_NOT_EXIST);
 						break;
 					}
 					accManager.deleteAccount(number);
@@ -146,23 +150,23 @@ public class BankAccountApp {
 					System.out.println(
 							"Enter one of these operations:" + "/n" + " DEPOSIT, WITHDRAW, BALANCE, MENU or QUIT. ");
 					operation = scan.next();
-					if (operation.equalsIgnoreCase("BALANCE")) {
+					if (operation.equalsIgnoreCase(BALANCE)) {
 						System.out.println("Enter Account Number");
 						number = scan.nextInt();
 						BankAccount tmpacc = accManager.findAccount(number);
 						if (tmpacc == null) {
-							System.out.println("Account dosen't exist");
+							System.out.println(ACCOUNT_DOES_NOT_EXIST);
 							break;
 						}
 						System.out.println("Balance is: " + tmpacc.getBalance());
 					}
 
-					if (operation.equalsIgnoreCase("DEPOSIT")) {
+					if (operation.equalsIgnoreCase(DEPOSIT)) {
 						System.out.println("Enter Account number");
 						number = scan.nextInt();
 						BankAccount tmpacc = accManager.findAccount(number);
 						if (tmpacc == null) {
-							System.out.println("Account dosen't exist");
+							System.out.println(ACCOUNT_DOES_NOT_EXIST);
 							break;
 						} else {
 							System.out.println("Enter an amount to deposit");
@@ -170,12 +174,12 @@ public class BankAccountApp {
 						double depositAmount = scan.nextDouble();
 						tmpacc.depositMoney(depositAmount);
 					}
-					if (operation.equalsIgnoreCase("WITHDRAW")) {
+					if (operation.equalsIgnoreCase(WITHDRAW)) {
 						System.out.println("Enter Account number");
 						number = scan.nextInt();
 						BankAccount tmpacc = accManager.findAccount(number);
 						if (tmpacc == null) {
-							System.out.println("Account dosen't exist");
+							System.out.println(ACCOUNT_DOES_NOT_EXIST);
 							break;
 						} else {
 							System.out.println("Enter an amount to withdraw");

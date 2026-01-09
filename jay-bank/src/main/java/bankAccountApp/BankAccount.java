@@ -129,8 +129,7 @@ public class BankAccount {
 	}
 
 	public boolean withdrawMoney(double withdrawAmount) {
-		if (withdrawAmount >= 0 && balance >= withdrawAmount && withdrawAmount < withdrawLimit
-				&& withdrawAmount + amountWithdrawn <= withdrawLimit) {
+		if (isWithdrawalValid(withdrawAmount)) {
 			balance = balance - withdrawAmount;
 			success = true;
 			amountWithdrawn += withdrawAmount;
@@ -138,6 +137,13 @@ public class BankAccount {
 			success = false;
 		}
 		return success;
+	}
+
+	private boolean isWithdrawalValid(double withdrawAmount) {
+		return withdrawAmount >= 0 
+			&& balance >= withdrawAmount 
+			&& withdrawAmount < withdrawLimit
+			&& withdrawAmount + amountWithdrawn <= withdrawLimit;
 	}
 
 	public void setAccountNumber(int accNumber) {
@@ -157,12 +163,9 @@ public class BankAccount {
 	public int loadFromText(String text) {
 		int accountsLoaded = 0;
 		Bank accManager = new Bank();
-		FileInputStream fis = null;
-		Scanner fileScanner = null;
-		try {
+		try (FileInputStream fis = new FileInputStream(text);
+			 Scanner fileScanner = new Scanner(fis)) {
 			while (fileScanner.hasNextLine()) {
-				fis = new FileInputStream(text);
-				fileScanner = new Scanner(fis);
 				BankAccount tmpAccount = new BankAccount();
 				tmpAccount.setAccountNumber(fileScanner.nextInt());
 				tmpAccount.setBalance(fileScanner.nextDouble());
@@ -183,22 +186,9 @@ public class BankAccount {
 				tmpAccount.setAccountHolder(accountHolderManager);
 				accountsLoaded = accManager.addAccount(tmpAccount, 1);
 			}
-			fis.close();
 
 		} catch (Exception e) {
 			System.out.println("Error reading file");
-		} finally {
-			if (fis != null) {
-				try {
-					fis.close();
-
-				} catch (IOException ex) {
-					// ignore
-				}
-			}
-			if (fileScanner != null) {
-				fileScanner.close();
-			}
 		}
 		return accountsLoaded;
 	}
