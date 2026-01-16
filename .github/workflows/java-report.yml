@@ -16,9 +16,9 @@ jobs:
     
     - name: Check for committed .class files
       run: |
-        if find . -name "*.class" -type f ! -path "./target/*" ! -path "./.git/*" | grep -q .; then
+        if find . -name "*.class" -type f ! -path "*/target/*" ! -path "*/.git/*" ! -path "*/.github/*" | grep -q .; then
           echo "ERROR: Found committed .class files (bad practice). Please remove them."
-          find . -name "*.class" -type f ! -path "./target/*" ! -path "./.git/*"
+          find . -name "*.class" -type f ! -path "*/target/*" ! -path "*/.git/*" ! -path "*/.github/*"
           exit 1
         fi
         echo "✓ No committed .class files found"
