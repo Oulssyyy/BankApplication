@@ -14,8 +14,8 @@ public class BankAccountTest {
 	String name = "John";
 	char gender = 'm';
 	int age = 22;
-	int weight = 190;
-	float height = 172;
+	float weight = 190.0f;
+	float height = 172.0f;
 	String hairColor = "brown";
 	String eyeColor = "green";
 	String email = "jufm@gmail.com";

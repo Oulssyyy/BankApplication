@@ -90,21 +90,21 @@ public class Person {
 	 */
 	@SuppressWarnings("resource")
 	public Person(String accountHolder) throws Exception {
-		Scanner scan = null;
 		try {
-			scan = new Scanner(accountHolder).useDelimiter(DELIM);
-			name = scan.next();
-			gender = scan.next().charAt(0);
-			age = scan.nextInt();
-			height = scan.nextFloat();
-			weight = scan.nextFloat();
-			hairColor = scan.next();
-			eyeColor = scan.next();
-			email = scan.next();
-		} finally {
-			if (scan != null) {
-				scan.close();
+			String[] tokens = accountHolder.split(Person.DELIM);
+			if (tokens.length < 8) {
+				throw new Exception("Invalid person format: insufficient fields");
 			}
+			name = tokens[0];
+			gender = tokens[1].charAt(0);
+			age = Integer.parseInt(tokens[2]);
+			height = Float.parseFloat(tokens[3]);
+			weight = Float.parseFloat(tokens[4]);
+			hairColor = tokens[5];
+			eyeColor = tokens[6];
+			email = tokens[7];
+		} catch (NumberFormatException e) {
+			throw new Exception("Invalid person format: " + e.getMessage());
 		}
 		validate();
 	}
